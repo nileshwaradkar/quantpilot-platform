@@ -36,6 +36,10 @@ The launcher keeps the preview process running in the background. Logs and the p
 
 Keeping the UI and API on the same origin simplifies cookie security and deployment. No Redis service is needed for this bounded single-worker release: PostgreSQL persists execution intent and coordinates ownership. Capacity must be measured before a broader rollout; the worker currently processes accounts sequentially.
 
+## Free testing deployment
+
+Use [docs/FREE-HOSTING.md](docs/FREE-HOSTING.md) and **render-free.yaml** for a free Render + Neon paper-testing pilot. It sleeps, has usage quotas, and cannot provide unattended live trading. The original render.yaml below provisions paid services.
+
 ## Deploy
 
 Follow [docs/RENDER.md](docs/RENDER.md). Upload **this directory only** as the root of a private repository; do not upload the parent folder containing legacy broker files.

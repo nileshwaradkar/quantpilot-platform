@@ -15,7 +15,8 @@
     "migrate": "node dist/migrate.js",
     "test": "vitest run",
     "check": "npm run build && npm test",
-    "demo": "tsx src/demo-server.ts"
+    "demo": "tsx src/demo-server.ts",
+    "start:free": "node dist/free-server.js"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",

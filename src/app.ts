@@ -64,7 +64,7 @@ export async function buildApp(db:Database,c:Config,sendMail:Mailer=mailer(c)){
   await sendMail(email,purpose,token);
  }
  app.get('/healthz',async()=>{await db.query('SELECT 1');return {status:'ok'};});
- app.get('/api/config',async()=>({rules:RULES,inviteRequired:!!c.REGISTRATION_CODE,emailEnabled:!!c.SMTP_HOST,brokerConfigured:!!c.FYERS_APP_ID&&!!c.FYERS_APP_SECRET,liveEnabled:c.LIVE_TRADING_ENABLED==='true',squareOff:{index:'15:15',crudeoil:c.MCX_SQUARE_OFF}}));
+ app.get('/api/config',async()=>({rules:RULES,hostingProfile:c.DEPLOYMENT_PROFILE,inviteRequired:!!c.REGISTRATION_CODE,emailEnabled:!!c.SMTP_HOST,brokerConfigured:!!c.FYERS_APP_ID&&!!c.FYERS_APP_SECRET,liveEnabled:c.LIVE_TRADING_ENABLED==='true',squareOff:{index:'15:15',crudeoil:c.MCX_SQUARE_OFF}}));
  app.post('/api/auth/register',async(req,reply)=>{
   await limit('register:'+req.ip,5,3600);
   const data=credentials.extend({name:z.string().trim().min(2).max(60),invite:z.string().max(200).default('')}).strict().parse(req.body);

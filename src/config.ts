@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  DEPLOYMENT_PROFILE: z.enum(['standard','free-paper']).default('standard'),
   PORT: z.coerce.number().int().min(1).max(65535).default(3000),
   APP_ORIGIN: z.url(), DATABASE_URL: z.string().min(1),
   ENCRYPTION_KEY: z.string().min(32), REGISTRATION_CODE: z.string().default(''),
@@ -19,6 +20,7 @@ const schema = z.object({
 export type Config = z.infer<typeof schema>;
 export function config(env: NodeJS.ProcessEnv = process.env): Config {
   const c = schema.parse({ ...env, APP_ORIGIN: env.APP_ORIGIN || env.RENDER_EXTERNAL_URL || 'http://localhost:3000' });
+  if(c.DEPLOYMENT_PROFILE==='free-paper' && c.LIVE_TRADING_ENABLED==='true') throw new Error('Free hosting supports paper trading only');
   c.APP_ORIGIN = new URL(c.APP_ORIGIN).origin;
   if (c.NODE_ENV === 'production' && (!c.APP_ORIGIN.startsWith('https://') || c.ENCRYPTION_KEY.startsWith('replace-'))) throw new Error('Production requires HTTPS and a generated encryption key');
   if (c.NODE_ENV === 'production' && !c.SMTP_HOST && !c.REGISTRATION_CODE) throw new Error('Configure SMTP verification or private invite registration');

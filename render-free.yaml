@@ -1,0 +1,31 @@
+# Free paper-testing only. Supply a dedicated Neon Free direct PostgreSQL URL.
+# No paid worker, Render database, disk, or paid pre-deploy command.
+services:
+  - type: web
+    name: quantpilot-paper
+    runtime: node
+    region: singapore
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build && npm test
+    startCommand: npm run start:free
+    healthCheckPath: /healthz
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: DEPLOYMENT_PROFILE
+        value: free-paper
+      - key: DATABASE_URL
+        sync: false
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: REGISTRATION_CODE
+        generateValue: true
+      - key: LIVE_TRADING_ENABLED
+        value: "false"
+      - key: BROKER_APP_APPROVED
+        value: "false"
+      - key: DEDICATED_EGRESS_CONFIRMED
+        value: "false"
