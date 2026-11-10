@@ -11,7 +11,7 @@ describe('free paper deployment',()=>{
   expect(y.databases).toBeUndefined();expect(y.services).toHaveLength(1);
   const s=y.services[0];expect(s.type).toBe('web');expect(s.plan).toBe('free');
   expect(s.preDeployCommand).toBeUndefined();expect(s.disk).toBeUndefined();
-  expect(s.startCommand).toBe('npm run start:free');
+  expect(s.startCommand).toBe('npm run start:cloud');
   expect(s.envVars.find((v:any)=>v.key==='DATABASE_URL').sync).toBe(false);
  });
  it('rejects live trading even with otherwise valid approval and credentials',()=>{

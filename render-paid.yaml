@@ -1,0 +1,97 @@
+# Deploy THIS directory as the repository root. Paid always-running services.
+services:
+  - type: web
+    name: quantpilot-web
+    runtime: node
+    region: singapore
+    plan: 0.5c-512mb
+    numInstances: 1
+    buildCommand: npm ci --include=dev && npm run build && npm test
+    preDeployCommand: npm run migrate
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quantpilot-db
+          property: connectionString
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: APP_ORIGIN
+        sync: false
+      - key: REGISTRATION_CODE
+        generateValue: true
+      - key: FYERS_APP_ID
+        sync: false
+      - key: FYERS_APP_SECRET
+        sync: false
+      - key: LIVE_TRADING_ENABLED
+        value: "false"
+      - key: BROKER_APP_APPROVED
+        value: "false"
+      - key: DEDICATED_EGRESS_CONFIRMED
+        value: "false"
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: MCX_SQUARE_OFF
+        value: "23:00"
+  - type: worker
+    name: quantpilot-trading
+    runtime: node
+    region: singapore
+    plan: 0.5c-512mb
+    numInstances: 1
+    buildCommand: npm ci --include=dev && npm run build
+    preDeployCommand: npm run migrate
+    startCommand: npm run worker
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quantpilot-db
+          property: connectionString
+      - key: APP_ORIGIN
+        fromService: {name: quantpilot-web, type: web, envVarKey: APP_ORIGIN}
+      - key: ENCRYPTION_KEY
+        fromService: {name: quantpilot-web, type: web, envVarKey: ENCRYPTION_KEY}
+      - key: REGISTRATION_CODE
+        fromService: {name: quantpilot-web, type: web, envVarKey: REGISTRATION_CODE}
+      - key: FYERS_APP_ID
+        fromService: {name: quantpilot-web, type: web, envVarKey: FYERS_APP_ID}
+      - key: FYERS_APP_SECRET
+        fromService: {name: quantpilot-web, type: web, envVarKey: FYERS_APP_SECRET}
+      - key: LIVE_TRADING_ENABLED
+        fromService: {name: quantpilot-web, type: web, envVarKey: LIVE_TRADING_ENABLED}
+      - key: BROKER_APP_APPROVED
+        fromService: {name: quantpilot-web, type: web, envVarKey: BROKER_APP_APPROVED}
+      - key: DEDICATED_EGRESS_CONFIRMED
+        fromService: {name: quantpilot-web, type: web, envVarKey: DEDICATED_EGRESS_CONFIRMED}
+      - key: MCX_SQUARE_OFF
+        fromService: {name: quantpilot-web, type: web, envVarKey: MCX_SQUARE_OFF}
+databases:
+  - name: quantpilot-db
+    region: singapore
+    plan: 0.1c-256mb
+    postgresMajorVersion: "17"
+    databaseName: quantpilot
+    user: quantpilot
+    diskSizeGB: 5
+    ipAllowList: []
+

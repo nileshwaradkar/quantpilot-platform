@@ -1,4 +1,4 @@
-# Free paper-testing only. Supply a dedicated Neon Free direct PostgreSQL URL.
+# Free dashboard; paper scanner runs on your laptop. Supply a dedicated Neon Free direct PostgreSQL URL.
 # No paid worker, Render database, disk, or paid pre-deploy command.
 services:
   - type: web
@@ -7,7 +7,7 @@ services:
     region: singapore
     plan: free
     buildCommand: npm ci --include=dev && npm run build && npm test
-    startCommand: npm run start:free
+    startCommand: npm run start:cloud
     healthCheckPath: /healthz
     autoDeployTrigger: off
     envVars:
@@ -29,3 +29,7 @@ services:
         value: "false"
       - key: DEDICATED_EGRESS_CONFIRMED
         value: "false"
+      - key: FYERS_APP_ID
+        sync: false
+      - key: FYERS_APP_SECRET
+        sync: false

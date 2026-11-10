@@ -6,7 +6,7 @@ out=root.parent/'release'
 out.mkdir(exist_ok=True)
 archive=out/'QuantPilot-render.zip'
 directories=['src','public','migrations','tests','docs','scripts','.github']
-files=['package.json','package-lock.json','tsconfig.json','vitest.config.ts','render.yaml','render-free.yaml','compose.yaml','.env.example','.gitignore','README.md','VERIFICATION.md','Start QuantPilot.cmd']
+files=['package.json','package-lock.json','tsconfig.json','vitest.config.ts','render.yaml','render-free.yaml','render-paid.yaml','Start Paper Scanner.cmd','.env.laptop.example','compose.yaml','.env.example','.gitignore','README.md','VERIFICATION.md','Start QuantPilot.cmd']
 selected=[root/p for p in files]
 for directory in directories:
     selected.extend(p for p in (root/directory).rglob('*') if p.is_file() and '__pycache__' not in p.parts and not p.is_symlink())

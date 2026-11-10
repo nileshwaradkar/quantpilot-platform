@@ -39,7 +39,7 @@ function rules(){
 function readiness(){
  const items=[[state.user.verified,'Account verified'],[!!state.broker?.connected,'FYERS connected'],[state.engine.online,'Trading worker online']];
  if(mode==='live')items.push([state.liveEnabled,'Live execution enabled']);
- return ((!demo&&cfg.hostingProfile==='free-paper')?'<p role="note">Free paper-testing host: monitoring stops when the service sleeps. After a restart, resume monitoring explicitly. Paper exits during downtime are not simulated.</p>':'')+'<div class="readiness">'+items.map(([ok,label])=>'<span class="'+(ok?'ready':'')+'">'+(ok?'✓':'○')+' '+label+'</span>').join('')+'</div>';
+ return ((!demo&&cfg.hostingProfile==='free-paper')?'<p role="note">Paper testing: keep the scanner laptop awake and online. After a restart, resume monitoring explicitly. Paper exits during downtime are not simulated.</p>':'')+'<div class="readiness">'+items.map(([ok,label])=>'<span class="'+(ok?'ready':'')+'">'+(ok?'✓':'○')+' '+label+'</span>').join('')+'</div>';
 }
 function render(){
  if(!state||!mode||!instrument)return;

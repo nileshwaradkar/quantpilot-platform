@@ -6,7 +6,7 @@ import { migrate,one } from '../src/db.js';
 import { testDatabase,cfg } from './helpers.js';
 describe('Render deployment contract',()=>{
  it('defines paid web and worker services with one private PostgreSQL database',async()=>{
-  const yaml=parse(await readFile('render.yaml','utf8'));
+  const yaml=parse(await readFile('render-paid.yaml','utf8'));
   expect(yaml.services.map((s:any)=>s.type)).toEqual(['web','worker']);
   for(const s of yaml.services){expect(s.runtime).toBe('node');expect(s.plan).not.toBe('free');expect(s.numInstances).toBe(1);expect(s.preDeployCommand).toBe('npm run migrate');expect(s.autoDeployTrigger).toBe('off');}
   expect(yaml.databases[0].ipAllowList).toEqual([]);
